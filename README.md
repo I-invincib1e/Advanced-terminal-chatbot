@@ -88,10 +88,9 @@ The chatbot includes comprehensive error handling for:
 
 ## 🎨 Interface Preview
 
-```
+
 <img width="685" height="758" alt="image" src="https://github.com/user-attachments/assets/af66c44d-aff7-4b0f-8d1a-f05ab28c8a8a" />
 
-```
 
 ## 🛠️ Troubleshooting
 
