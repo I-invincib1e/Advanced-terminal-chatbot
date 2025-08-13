@@ -89,13 +89,8 @@ The chatbot includes comprehensive error handling for:
 ## 🎨 Interface Preview
 
 ```
-═══════════════════════════════════════════════════════════════════════
-🤖  ADVANCED TERMINAL CHATBOT  🤖
-═══════════════════════════════════════════════════════════════════════
-🌐 Powered by fast.typegpt.net API
-🚀 Multi-Provider Support: OpenAI & Anthropic
-💬 Intelligent Conversation with Memory
-═══════════════════════════════════════════════════════════════════════
+<img width="685" height="758" alt="image" src="https://github.com/user-attachments/assets/af66c44d-aff7-4b0f-8d1a-f05ab28c8a8a" />
+
 ```
 
 ## 🛠️ Troubleshooting
