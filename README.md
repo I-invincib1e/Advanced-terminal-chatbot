@@ -8,15 +8,17 @@
 
 > A powerful, modular terminal-based chatbot with direct support for OpenAI and Anthropic APIs
 
-[🚀 Quick Start](#-quick-start) • [✨ Features](#-features) • [🧩 Modules](#-modules) • [� Contributing](#-contributing)
+[🚀 Quick Start](#-quick-start) • [✨ Features](#-features) • [🧩 Modules](#-modules) • [🤝 Contributing](#-contributing)
 
 </div>
 
-## � Quick Start
+## 🚀 Quick Start
 
 ### Prerequisites
-- Python 3.8+
-- OpenAI or Anthropic API key
+- **Python**: 3.8 or higher
+- **Dependencies**: requests, python-dotenv, pygments libraries
+- **API Key**: Valid key from OpenAI or Anthropic
+- **Internet**: Stable connection required
 
 ### Installation & Setup
 ```bash
@@ -39,11 +41,11 @@ python main.py
 
 | Feature | Description |
 |---------|-------------|
-| � **Multi-Provider Support** | Works with both OpenAI and Anthropic APIs |
+| 🧠 **Multi-Provider Support** | Works with both OpenAI and Anthropic APIs |
 | 🌈 **Syntax Highlighting** | Beautiful code display with Pygments |
 | 🗂️ **Conversation Branching** | Create multiple conversation threads |
-| � **Context Management** | Switch between different contexts seamlessly |
-| � **Memory System** | Store and recall important information |
+| 🌿 **Context Management** | Switch between different contexts seamlessly |
+| 💾 **Memory System** | Store and recall important information |
 | 🧪 **Code Analysis** | Analyze code structure and suggest improvements |
 
 ## 🧩 Core Modules
@@ -121,6 +123,6 @@ python -m unittest tests.test_chat -v
 
 Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
-## � Show Your Support
+## 🌟 Show Your Support
 
 If you find this project useful, please consider giving it a star! ⭐
