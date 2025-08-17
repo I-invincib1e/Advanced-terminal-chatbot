@@ -11,10 +11,11 @@ from dotenv import load_dotenv
 class ConfigManager:
     """Manages configuration and environment variables."""
     
-    def __init__(self, env_file: str = ".env"):
+    def __init__(self, env_file: str = ".env", load_env: bool = True):
         self.env_file = env_file
         self.config: Dict[str, Any] = {}
-        self._load_environment()
+        if load_env:
+            self._load_environment()
     
     def _load_environment(self) -> None:
         """Load environment variables from .env file if it exists."""
