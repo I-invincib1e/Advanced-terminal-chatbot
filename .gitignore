@@ -46,6 +46,7 @@ Thumbs.db
 .env
 config.ini
 secrets.txt
+temp_env.txt
 
 # Test files
 test.py
