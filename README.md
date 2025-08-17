@@ -1,100 +1,128 @@
-# Advanced Terminal ChatBot
+<div align="center">
+  
+# 🤖 Advanced Terminal Chatbot
 
-A sophisticated terminal-based chatbot with multi-provider support using OpenAI-compatible API from fast.typegpt.net.
+[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/Version-1.0.0-orange.svg)](https://github.com/Neorex80/advanced-terminal-chatbot)
 
-## ✨ Features
+> A powerful, modular terminal-based chatbot with direct support for OpenAI and Anthropic APIs
 
-- 🤖 **Interactive Terminal Interface** - Beautiful, user-friendly terminal UI
-- 🏢 **Multi-Provider Support** - Choose between OpenAI, Anthropic, or API discovery
-- 🔑 **Secure API Key Input** - Safe API key handling
-- 🎯 **Smart Model Selection** - Predefined models for each provider
-- 💬 **Conversation Memory** - Maintains chat history throughout session
-- 🧹 **History Management** - Clear conversation history anytime
-- ⚡ **Advanced Error Handling** - Comprehensive error detection and recovery
-- 🎨 **Enhanced UI** - Clean, organized terminal interface with emojis
-- 🚪 **Multiple Exit Options** - Flexible ways to end conversations
+[🚀 Quick Start](#-quick-start) • [✨ Features](#-features) • [🧩 Modules](#-modules) • [🤝 Contributing](#-contributing)
 
-## 🚀 Installation
+</div>
 
-1. **Prerequisites**: Python 3.6+ installed
-2. **Install Dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
+## 🚀 Quick Start
 
-## 📖 Usage
-
-1. **Start the ChatBot**:
-   ```bash
-   python chatbot.py
-   ```
-
-2. **Follow the Setup Process**:
-   - 🔑 Enter your API key
-   - 🏢 Choose your provider:
-     - **OpenAI** (3 premium models)
-     - **Anthropic** (3 Claude models)
-     - **API Discovery** (fetch available models)
-   - 🤖 Select your preferred model
-   - 💬 Start chatting!
-
-## 🎯 Available Models
-
-### OpenAI Provider
-- `openai/chatgpt-4o-latest`
-- `openai/gpt-4.1`
-- `openai/o1-mini`
-
-### Anthropic Provider
-- `anthropic/claude-sonnet-4`
-- `anthropic/claude-3.7-sonnet`
-- `anthropic/claude-3.7-sonnet:thinking`
-
-### API Discovery
-- Fetches up to 5 available models from the API
-
-## 💬 Chat Commands
-
-| Command | Description |
-|---------|-------------|
-| `Type message` | Send message to AI |
-| `clear` | Clear conversation history |
-| `quit`, `exit`, `bye` | End conversation |
-| `Ctrl+C` | Force quit anytime |
-
-## 🔧 Error Handling
-
-The chatbot includes comprehensive error handling for:
-- ❌ **Authentication Errors** - Invalid API keys
-- ⏱️ **Timeout Issues** - Network timeouts
-- 🚫 **Rate Limiting** - API rate limit exceeded
-- 🔍 **Model Availability** - Unavailable models
-- 🌐 **Connection Problems** - Network connectivity issues
-- 📝 **Invalid Responses** - Malformed API responses
-
-## 🌐 API Provider
-
-- **Base URL**: https://fast.typegpt.net/v1
-- **Format**: OpenAI-compatible API
-- **Authentication**: Bearer token
-- **Timeout**: 30 seconds per request
-
-## 📋 Requirements
-
-- **Python**: 3.6 or higher
-- **Dependencies**: requests library
-- **API Key**: Valid key from fast.typegpt.net
+### Prerequisites
+- **Python**: 3.8 or higher
+- **Dependencies**: requests, python-dotenv, pygments libraries
+- **API Key**: Valid key from OpenAI or Anthropic
 - **Internet**: Stable connection required
 
-## 🎨 Interface Preview
+### Installation & Setup
+```bash
+# Clone the repository
+git clone https://github.com/Neorex80/advanced-terminal-chatbot.git
+cd advanced-terminal-chatbot
 
+# Install dependencies
+pip install -r requirements.txt
 
-<img width="685" height="758" alt="image" src="https://github.com/user-attachments/assets/af66c44d-aff7-4b0f-8d1a-f05ab28c8a8a" />
+# Create and configure environment file
+python main.py --create-env
+# Edit .env with your API keys
 
+# Run the chatbot
+python main.py
+```
 
-## 🛠️ Troubleshooting
+## ✨ Key Features
 
-- **API Key Issues**: Ensure your key is valid and has sufficient credits
-- **Model Errors**: Try selecting a different model or provider
-- **Connection Problems**: Check your internet connection
-- **Rate Limits**: Wait a moment before sending another message
+| Feature | Description |
+|---------|-------------|
+| 🧠 **Multi-Provider Support** | Works with both OpenAI and Anthropic APIs |
+| 🌈 **Syntax Highlighting** | Beautiful code display with Pygments |
+| 🗂️ **Conversation Branching** | Create multiple conversation threads |
+| 🌿 **Context Management** | Switch between different contexts seamlessly |
+| 💾 **Memory System** | Store and recall important information |
+| 🧪 **Code Analysis** | Analyze code structure and suggest improvements |
+
+## 🧩 Core Modules
+
+<details>
+<summary><b>Click to expand module overview</b></summary>
+
+| Module | Functionality |
+|--------|---------------|
+| `chatbot.py` | Main application orchestrator |
+| `chat.py` | Chat session management and API communication |
+| `provider.py` | AI provider selection and model management |
+| `code_analyzer.py` | Code analysis and syntax highlighting |
+| `context_manager.py` | Context switching and memory storage |
+| `conversation_brancher.py` | Branch management for conversations |
+| `utils.py` | Configuration and utility functions |
+
+</details>
+
+## 📖 Usage Examples
+
+### Basic Chat Commands
+```bash
+/help          # Show help information
+/clear         # Clear conversation history
+/history       # Show conversation history
+/stream        # Toggle streaming mode
+/quit          # Exit the chat
+```
+
+### Code Analysis
+```bash
+/analyze def hello(): print("Hello World")  # Full code analysis
+/highlight function greet(name) { return `Hello ${name}!`; }  # Syntax only
+```
+
+### Context Management
+```bash
+/context create Python Development python,development  # Create new context
+/context switch ctx_abc123                            # Switch context
+```
+
+### Branch Management
+```bash
+/branch create Feature Development feature,new        # Create new branch
+/branch fork Experiment                               # Fork current branch
+/branch tree                                         # View branch structure
+```
+
+### Memory System
+```bash
+/memory add "Python is great for data analysis" 0.8 python,data fact  # Add memory
+/memory search python                                                 # Search memories
+```
+
+## 🧪 Testing
+
+```bash
+# Run all tests
+python run_tests.py
+
+# Run specific test
+python -m unittest tests.test_chat -v
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a pull request
+
+## 📄 License
+
+Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
+
+## 🌟 Show Your Support
+
+If you find this project useful, please consider giving it a star! ⭐
