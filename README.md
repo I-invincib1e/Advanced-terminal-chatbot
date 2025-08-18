@@ -5,14 +5,17 @@
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/Version-1.0.0-orange.svg)](https://github.com/Neorex80/advanced-terminal-chatbot)
+[![Tests](https://img.shields.io/badge/Tests-Passing-brightgreen.svg)](https://github.com/Neorex80/advanced-terminal-chatbot)
 
 > A powerful, modular terminal-based chatbot with direct support for OpenAI and Anthropic APIs
 
-[🚀 Quick Start](#-quick-start) • [✨ Features](#-features) • [🧩 Modules](#-modules) • [🤝 Contributing](#-contributing)
+[🚀 Quick Start](#-quick-start) • [✨ Features](#-features) • [🧩 Modules](#-modules) • [📖 Usage](#-usage) • [🤝 Contributing](#-contributing)
 
 </div>
 
 ## 🚀 Quick Start
+
+Get up and running with the Advanced Terminal Chatbot in just a few minutes.
 
 ### Prerequisites
 - **Python**: 3.8 or higher
@@ -39,14 +42,16 @@ python main.py
 
 ## ✨ Key Features
 
+Experience the full power of AI in your terminal with these advanced features:
+
 | Feature | Description |
 |---------|-------------|
-| 🧠 **Multi-Provider Support** | Works with both OpenAI and Anthropic APIs |
-| 🌈 **Syntax Highlighting** | Beautiful code display with Pygments |
-| 🗂️ **Conversation Branching** | Create multiple conversation threads |
-| 🌿 **Context Management** | Switch between different contexts seamlessly |
-| 💾 **Memory System** | Store and recall important information |
-| 🧪 **Code Analysis** | Analyze code structure and suggest improvements |
+| 🧠 **Multi-Provider Support** | Seamlessly switch between OpenAI and Anthropic models |
+| 🌈 **Syntax Highlighting** | Beautiful code display with Pygments for better readability |
+| 🗂️ **Conversation Branching** | Create multiple conversation threads for different topics |
+| 🌿 **Context Management** | Switch between different contexts to organize your chats |
+| 💾 **Memory System** | Store and recall important information across conversations |
+| 🧪 **Code Analysis** | Analyze code structure and get suggestions for improvements |
 
 ## 🧩 Core Modules
 
@@ -65,7 +70,7 @@ python main.py
 
 </details>
 
-## 📖 Usage Examples
+## 📖 Usage
 
 ### Basic Chat Commands
 ```bash
@@ -86,13 +91,16 @@ python main.py
 ```bash
 /context create Python Development python,development  # Create new context
 /context switch ctx_abc123                            # Switch context
+/context info                                        # Show current context
 ```
 
 ### Branch Management
 ```bash
 /branch create Feature Development feature,new        # Create new branch
 /branch fork Experiment                               # Fork current branch
+/branch switch branch_abc123                          # Switch to branch
 /branch tree                                         # View branch structure
+/branch info                                         # Show current branch
 ```
 
 ### Memory System
@@ -103,15 +111,19 @@ python main.py
 
 ## 🧪 Testing
 
+We use pytest for testing with coverage reports to ensure code quality.
+
 ```bash
-# Run all tests
+# Run all tests with coverage
 python run_tests.py
 
-# Run specific test
+# Run specific test module
 python -m unittest tests.test_chat -v
 ```
 
 ## 🤝 Contributing
+
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
@@ -126,3 +138,9 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 ## 🌟 Show Your Support
 
 If you find this project useful, please consider giving it a star! ⭐
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ by <a href="https://github.com/Neorex80">Neorex80</a></sub>
+</p>

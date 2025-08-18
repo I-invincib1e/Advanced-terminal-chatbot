@@ -351,57 +351,104 @@ class TestConfigManager(unittest.TestCase):
     
     def setUp(self):
         """Set up test fixtures."""
-        # Mock environment variables
-        self.env_patcher = patch.dict(os.environ, {
-            'OPENAI_API_KEY': 'test_openai_key',
-            'ANTHROPIC_API_KEY': 'test_anthropic_key',
-            'OPENAI_BASE_URL': 'https://api.openai.com/v1',
-            'ANTHROPIC_BASE_URL': 'https://api.anthropic.com/v1',
-            'DEFAULT_MODEL': 'gpt-4o',
-            'DEFAULT_PROVIDER': 'OpenAI'
-        })
-        self.env_patcher.start()
+        pass
     
     def tearDown(self):
         """Clean up after tests."""
-        self.env_patcher.stop()
+        pass
     
+    @patch.dict(os.environ, {
+        'OPENAI_API_KEY': 'test_openai_key',
+        'ANTHROPIC_API_KEY': 'test_anthropic_key',
+        'OPENAI_BASE_URL': 'https://api.openai.com/v1',
+        'ANTHROPIC_BASE_URL': 'https://api.anthropic.com/v1',
+        'DEFAULT_MODEL': 'gpt-4o',
+        'DEFAULT_PROVIDER': 'OpenAI'
+    })
     def test_get_openai_api_key(self):
         """Test getting OpenAI API key from environment."""
         config = ConfigManager()
         api_key = config.get_openai_api_key()
         self.assertEqual(api_key, 'test_openai_key')
     
+    @patch.dict(os.environ, {
+        'OPENAI_API_KEY': 'test_openai_key',
+        'ANTHROPIC_API_KEY': 'test_anthropic_key',
+        'OPENAI_BASE_URL': 'https://api.openai.com/v1',
+        'ANTHROPIC_BASE_URL': 'https://api.anthropic.com/v1',
+        'DEFAULT_MODEL': 'gpt-4o',
+        'DEFAULT_PROVIDER': 'OpenAI'
+    })
     def test_get_anthropic_api_key(self):
         """Test getting Anthropic API key from environment."""
         config = ConfigManager()
         api_key = config.get_anthropic_api_key()
         self.assertEqual(api_key, 'test_anthropic_key')
     
+    @patch.dict(os.environ, {
+        'OPENAI_API_KEY': 'test_openai_key',
+        'ANTHROPIC_API_KEY': 'test_anthropic_key',
+        'OPENAI_BASE_URL': 'https://api.openai.com/v1',
+        'ANTHROPIC_BASE_URL': 'https://api.anthropic.com/v1',
+        'DEFAULT_MODEL': 'gpt-4o',
+        'DEFAULT_PROVIDER': 'OpenAI'
+    })
     def test_get_openai_base_url(self):
         """Test getting OpenAI base URL from environment."""
         config = ConfigManager()
         base_url = config.get_openai_base_url()
         self.assertEqual(base_url, 'https://api.openai.com/v1')
     
+    @patch.dict(os.environ, {
+        'OPENAI_API_KEY': 'test_openai_key',
+        'ANTHROPIC_API_KEY': 'test_anthropic_key',
+        'OPENAI_BASE_URL': 'https://api.openai.com/v1',
+        'ANTHROPIC_BASE_URL': 'https://api.anthropic.com/v1',
+        'DEFAULT_MODEL': 'gpt-4o',
+        'DEFAULT_PROVIDER': 'OpenAI'
+    })
     def test_get_anthropic_base_url(self):
         """Test getting Anthropic base URL from environment."""
         config = ConfigManager()
         base_url = config.get_anthropic_base_url()
         self.assertEqual(base_url, 'https://api.anthropic.com/v1')
     
+    @patch.dict(os.environ, {
+        'OPENAI_API_KEY': 'test_openai_key',
+        'ANTHROPIC_API_KEY': 'test_anthropic_key',
+        'OPENAI_BASE_URL': 'https://api.openai.com/v1',
+        'ANTHROPIC_BASE_URL': 'https://api.anthropic.com/v1',
+        'DEFAULT_MODEL': 'gpt-4o',
+        'DEFAULT_PROVIDER': 'OpenAI'
+    })
     def test_get_default_model(self):
         """Test getting default model from environment."""
         config = ConfigManager()
         model = config.get_default_model()
         self.assertEqual(model, 'gpt-4o')
     
+    @patch.dict(os.environ, {
+        'OPENAI_API_KEY': 'test_openai_key',
+        'ANTHROPIC_API_KEY': 'test_anthropic_key',
+        'OPENAI_BASE_URL': 'https://api.openai.com/v1',
+        'ANTHROPIC_BASE_URL': 'https://api.anthropic.com/v1',
+        'DEFAULT_MODEL': 'gpt-4o',
+        'DEFAULT_PROVIDER': 'OpenAI'
+    })
     def test_get_default_provider(self):
         """Test getting default provider from environment."""
         config = ConfigManager()
         provider = config.get_default_provider()
         self.assertEqual(provider, 'OpenAI')
     
+    @patch.dict(os.environ, {
+        'OPENAI_API_KEY': 'test_openai_key',
+        'ANTHROPIC_API_KEY': 'test_anthropic_key',
+        'OPENAI_BASE_URL': 'https://api.openai.com/v1',
+        'ANTHROPIC_BASE_URL': 'https://api.anthropic.com/v1',
+        'DEFAULT_MODEL': 'gpt-4o',
+        'DEFAULT_PROVIDER': 'OpenAI'
+    })
     def test_validate_config_success(self):
         """Test successful configuration validation."""
         config = ConfigManager()
@@ -412,7 +459,7 @@ class TestConfigManager(unittest.TestCase):
         """Test failed configuration validation."""
         # Remove API keys from environment
         with patch.dict(os.environ, {}, clear=True):
-            config = ConfigManager()
+            config = ConfigManager(load_env=False)
             result = config.validate_config()
             self.assertFalse(result)
     
@@ -427,7 +474,7 @@ class TestConfigManager(unittest.TestCase):
     def test_get_available_providers_openai_only(self):
         """Test getting available providers when only OpenAI key is set."""
         with patch.dict(os.environ, {'OPENAI_API_KEY': 'test_key'}, clear=True):
-            config = ConfigManager()
+            config = ConfigManager(load_env=False)
             providers = config.get_available_providers()
             self.assertIn("OpenAI", providers)
             self.assertNotIn("Anthropic", providers)
@@ -436,7 +483,7 @@ class TestConfigManager(unittest.TestCase):
     def test_get_available_providers_anthropic_only(self):
         """Test getting available providers when only Anthropic key is set."""
         with patch.dict(os.environ, {'ANTHROPIC_API_KEY': 'test_key'}, clear=True):
-            config = ConfigManager()
+            config = ConfigManager(load_env=False)
             providers = config.get_available_providers()
             self.assertIn("Anthropic", providers)
             self.assertNotIn("OpenAI", providers)
@@ -457,7 +504,7 @@ class TestConfigManager(unittest.TestCase):
     def test_get_primary_provider_none(self):
         """Test getting primary provider when none are available."""
         with patch.dict(os.environ, {}, clear=True):
-            config = ConfigManager()
+            config = ConfigManager(load_env=False)
             primary = config.get_primary_provider()
             self.assertIsNone(primary)
     
@@ -470,7 +517,7 @@ class TestConfigManager(unittest.TestCase):
     def test_require_api_keys_failure(self):
         """Test require_api_keys when no keys are available."""
         with patch.dict(os.environ, {}, clear=True):
-            config = ConfigManager()
+            config = ConfigManager(load_env=False)
             with self.assertRaises(ValueError) as context:
                 config.require_api_keys()
             self.assertIn("No API keys configured", str(context.exception))
