@@ -10,6 +10,7 @@ from rich.panel import Panel
 from .utils import ConfigManager, create_env_sample
 from .provider import ProviderManager
 from .chat import ChatSession
+from .ui_enhancements import enhanced_ui
 
 
 class TerminalChatBot:
@@ -23,18 +24,8 @@ class TerminalChatBot:
         self.console = Console()
     
     def display_welcome(self) -> None:
-        """Display the welcome message."""
-        self.console.print()
-        self.console.print(Panel(
-            "[bold green]Welcome to the Advanced Terminal Chatbot![/bold green]\n\n"
-            "Features:\n"
-            "✓ [cyan]Direct API Support for OpenAI & Anthropic[/cyan]\n"
-            "✓ [magenta]Multi-Provider AI Models[/magenta]\n"
-            "✓ [yellow]Beautiful UI with Code Analysis[/yellow]",
-            title="🤖 Advanced Terminal Chatbot 🤖",
-            border_style="bold blue"
-        ))
-        self.console.print()
+        """Display the enhanced welcome message with ASCII banner."""
+        enhanced_ui.show_startup_banner()
     
     def setup_provider_and_model(self) -> None:
         """Set up the provider and model selection."""
@@ -75,7 +66,11 @@ class TerminalChatBot:
                 )
 
         try:
-            models = self.provider_manager.fetch_api_models(self.selected_provider)
+            # First try to get default model for this provider
+            provider_default = self.provider_manager.get_default_model(self.selected_provider)
+            
+            # Get filtered common models (not all 53+ models)
+            models = self.provider_manager.fetch_api_models(self.selected_provider, use_defaults=True)
             if not models:
                 self.console.print(
                     Panel(
@@ -86,10 +81,15 @@ class TerminalChatBot:
                 )
                 sys.exit(1)
 
+            # Priority: 1) Config default 2) Provider default 3) First available model
             if default_model and default_model in models:
-                self.console.print(f"[bold blue]📋 Using default model: {default_model}[/bold blue]")
+                self.console.print(f"[bold blue]📋 Using config default model: {default_model}[/bold blue]")
                 self.selected_model = default_model
+            elif provider_default and provider_default in models:
+                self.console.print(f"[bold green]🎯 Using provider default model: {provider_default}[/bold green]")
+                self.selected_model = provider_default
             else:
+                self.console.print(f"[bold cyan]📝 Showing {len(models)} common models (use /models to see all)[/bold cyan]")
                 self.selected_model = self.provider_manager.select_api_model(models)
 
         except Exception as e:
@@ -173,7 +173,7 @@ Note: At least one API key (OPENAI_API_KEY or ANTHROPIC_API_KEY) must be set.
     parser.add_argument(
         '--version',
         action='version',
-        version='%(prog)s 1.0.0'
+        version='%(prog)s 1.2.0'
     )
     
     args = parser.parse_args()
