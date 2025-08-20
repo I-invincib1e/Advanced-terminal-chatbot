@@ -12,7 +12,7 @@ class BaseProvider(ABC):
         pass
 
     @abstractmethod
-    def validate_api_key(self, api_key: str) -> bool:
+    def validate_api_key(self) -> bool:
         """Validate the API key for the provider."""
         pass
 

@@ -147,8 +147,17 @@ def main():
         epilog="""
 Examples:
   %(prog)s                    # Start interactive chatbot
+  %(prog)s --health-check     # Run system health check
   %(prog)s --create-env       # Create sample .env file
   %(prog)s --help             # Show this help message
+
+Health Check:
+  The --health-check option verifies:
+  • Python version compatibility (3.8+)
+  • Required dependencies installation
+  • API key configuration
+  • Database connectivity
+  • Clipboard functionality
 
 Environment Variables:
   OPENAI_API_KEY              # Your OpenAI API key (optional)
@@ -165,6 +174,12 @@ Note: At least one API key (OPENAI_API_KEY or ANTHROPIC_API_KEY) must be set.
     )
     
     parser.add_argument(
+        '--health-check',
+        action='store_true',
+        help='Run comprehensive system health check'
+    )
+    
+    parser.add_argument(
         '--create-env',
         action='store_true',
         help='Create a sample .env file'
@@ -177,6 +192,11 @@ Note: At least one API key (OPENAI_API_KEY or ANTHROPIC_API_KEY) must be set.
     )
     
     args = parser.parse_args()
+    
+    if args.health_check:
+        from .features.health_check import run_health_check
+        run_health_check()
+        return
     
     if args.create_env:
         create_env_sample()
