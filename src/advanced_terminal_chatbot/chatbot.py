@@ -5,6 +5,8 @@ Main chatbot orchestrator module.
 import sys
 import argparse
 from typing import Optional
+from rich.console import Console
+from rich.panel import Panel
 from .utils import ConfigManager, create_env_sample
 from .provider import ProviderManager
 from .chat import ChatSession
@@ -18,100 +20,86 @@ class TerminalChatBot:
         self.provider_manager = ProviderManager(self.config)
         self.selected_model: Optional[str] = None
         self.selected_provider: Optional[str] = None
+        self.console = Console()
     
     def display_welcome(self) -> None:
         """Display the welcome message."""
-        print("\n" + "═" * 70)
-        print("🤖  ADVANCED TERMINAL CHATBOT  🤖".center(70))
-        print("═" * 70)
-        print("🌐 Direct API Support: OpenAI & Anthropic".center(70))
-        print("🚀 Multi-Provider AI Models".center(70))
-        print("💬 Intelligent Conversation with Memory".center(70))
-        print("═" * 70)
-        print()
+        self.console.print()
+        self.console.print(Panel(
+            "[bold green]Welcome to the Advanced Terminal Chatbot![/bold green]\n\n"
+            "Features:\n"
+            "✓ [cyan]Direct API Support for OpenAI & Anthropic[/cyan]\n"
+            "✓ [magenta]Multi-Provider AI Models[/magenta]\n"
+            "✓ [yellow]Beautiful UI with Code Analysis[/yellow]",
+            title="🤖 Advanced Terminal Chatbot 🤖",
+            border_style="bold blue"
+        ))
+        self.console.print()
     
-    def get_api_keys(self) -> None:
-        """Get API keys from user input if not in environment."""
-        # Check what's already configured
-        available_providers = self.config.get_available_providers()
-        
-        if not available_providers:
-            print("❌ No API keys found in environment variables.")
-            print("   Please set at least one of the following:")
-            print("   - OPENAI_API_KEY for OpenAI models")
-            print("   - ANTHROPIC_API_KEY for Anthropic models")
-            print()
-            
-            # Ask for at least one API key
-            while True:
-                provider_choice = input("Which provider would you like to use? (openai/anthropic): ").strip().lower()
-                if provider_choice in ['openai', 'o']:
-                    api_key = input("Enter your OpenAI API key: ").strip()
-                    if api_key:
-                        # Set environment variable for this session
-                        import os
-                        os.environ['OPENAI_API_KEY'] = api_key
-                        print("✅ OpenAI API key set for this session")
-                        break
-                    else:
-                        print("❌ API key cannot be empty")
-                elif provider_choice in ['anthropic', 'a']:
-                    api_key = input("Enter your Anthropic API key: ").strip()
-                    if api_key:
-                        # Set environment variable for this session
-                        import os
-                        os.environ['ANTHROPIC_API_KEY'] = api_key
-                        print("✅ Anthropic API key set for this session")
-                        break
-                    else:
-                        print("❌ API key cannot be empty")
-                else:
-                    print("❌ Please enter 'openai' or 'anthropic'")
-        else:
-            # At least one provider is configured
-            if len(available_providers) == 1:
-                print(f"✅ Using configured {available_providers[0]} API key")
-            else:
-                print(f"✅ Multiple providers configured: {', '.join(available_providers)}")
-                print("   You can select which one to use during setup")
-
     def setup_provider_and_model(self) -> None:
         """Set up the provider and model selection."""
         # Get default provider and model from config
         default_provider = self.config.get_default_provider()
         default_model = self.config.get_default_model()
-        
-        # Check if default provider is available
-        available_providers = self.config.get_available_providers()
-        if default_provider and default_provider in available_providers:
-            print(f"📋 Using default provider: {default_provider}")
+
+        self.console.print("[bold cyan]🔍 Validating API keys...[/bold cyan]")
+        validation_results = self.provider_manager.validate_api_keys()
+
+        valid_providers = [
+            provider for provider, is_valid in validation_results.items() if is_valid
+        ]
+
+        if not valid_providers:
+            self.console.print(
+                Panel(
+                    "[bold red]No valid API keys found. Please check your configuration. Run with --create-env to create a sample .env file.[/bold red]",
+                    title="[bold red]Validation Error[/bold red]",
+                    border_style="red",
+                )
+            )
+            sys.exit(1)
+
+        for provider in valid_providers:
+            self.console.print(f"[bold green]✅ {provider} API key is valid[/bold green]")
+
+        if default_provider and default_provider in valid_providers:
+            self.console.print(f"[bold blue]📋 Using default provider: {default_provider}[/bold blue]")
             self.selected_provider = default_provider
         else:
-            # Auto-select if only one provider available, otherwise let user choose
-            if len(available_providers) == 1:
-                self.selected_provider = available_providers[0]
-                print(f"✅ Auto-selected provider: {self.selected_provider}")
+            if len(valid_providers) == 1:
+                self.selected_provider = valid_providers[0]
+                self.console.print(f"[bold green]✅ Auto-selected provider: {self.selected_provider}[/bold green]")
             else:
-                self.selected_provider = self.provider_manager.select_provider()
-        
+                self.selected_provider = self.provider_manager.select_provider_from_list(
+                    valid_providers
+                )
+
         try:
-            # Fetch models for the selected provider
             models = self.provider_manager.fetch_api_models(self.selected_provider)
             if not models:
-                print("❌ Cannot proceed without available models.")
-                print("   Please check your API key and internet connection.")
+                self.console.print(
+                    Panel(
+                        "[bold red]Cannot proceed without available models. Please check your API key and internet connection.[/bold red]",
+                        title="[bold red]API Error[/bold red]",
+                        border_style="red",
+                    )
+                )
                 sys.exit(1)
-            
-            # Check if default model is available for selected provider
-            if default_model and self.provider_manager.validate_model(default_model, self.selected_provider):
-                print(f"📋 Using default model: {default_model}")
+
+            if default_model and default_model in models:
+                self.console.print(f"[bold blue]📋 Using default model: {default_model}[/bold blue]")
                 self.selected_model = default_model
             else:
-                # Let user select model
                 self.selected_model = self.provider_manager.select_api_model(models)
-                
+
         except Exception as e:
-            print(f"❌ Error during setup: {e}")
+            self.console.print(
+                Panel(
+                    f"[bold red]Error during setup: {e}[/bold red]",
+                    title="[bold red]Setup Error[/bold red]",
+                    border_style="red",
+                )
+            )
             sys.exit(1)
 
     def run(self) -> None:
@@ -119,35 +107,35 @@ class TerminalChatBot:
         try:
             self.display_welcome()
             
-            # Validate configuration and require at least one API key
             try:
                 self.config.require_api_keys()
             except ValueError as e:
-                print(f"\n❌ Configuration Error: {e}")
-                print("\n�� Tip: Create a .env file with your API keys")
-                print("   Run with --create-env to create a sample .env file")
-                print("   You need at least one of: OPENAI_API_KEY or ANTHROPIC_API_KEY")
+                self.console.print(
+                    Panel(
+                        f"[bold red]Configuration Error: {e}\n\nTip: Create a .env file with your API keys. Run with --create-env to create a sample .env file. You need at least one of: OPENAI_API_KEY or ANTHROPIC_API_KEY.[/bold red]",
+                        title="[bold red]Configuration Error[/bold red]",
+                        border_style="red",
+                    )
+                )
                 sys.exit(1)
             
-            # Get API keys if needed
-            self.get_api_keys()
-            
-            # Setup provider and model
             self.setup_provider_and_model()
             
-            # Create and start chat session
             chat_session = ChatSession(
-                self.config,
-                self.selected_model,
-                self.selected_provider
+                self.config, self.selected_model, self.selected_provider
             )
             chat_session.start_chat()
             
         except KeyboardInterrupt:
-            print("\n\n👋 Chatbot interrupted. Goodbye!")
+            self.console.print("\n\n[bold yellow]👋 Chatbot interrupted. Goodbye![/bold yellow]")
         except Exception as e:
-            print(f"\n❌ Unexpected error: {e}")
-            print("   Please check your configuration and try again.")
+            self.console.print(
+                Panel(
+                    f"[bold red]Unexpected error: {e}. Please check your configuration and try again.[/bold red]",
+                    title="[bold red]Error[/bold red]",
+                    border_style="red",
+                )
+            )
             sys.exit(1)
 
 

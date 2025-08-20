@@ -5,6 +5,7 @@ Code analysis and syntax highlighting for the terminal chatbot.
 import re
 import ast
 import json
+import math
 from typing import Dict, List, Any, Optional, Tuple
 from pathlib import Path
 import pygments
@@ -68,7 +69,57 @@ class CodeAnalyzer:
             'cmake': 'CMake',
             'txt': 'Text',
             'md': 'Markdown',
-            'markdown': 'Markdown'
+            'markdown': 'Markdown',
+            # Extended language support
+            'dart': 'Dart',
+            'kotlin': 'Kotlin',
+            'swift': 'Swift',
+            'rs': 'Rust',
+            'scala': 'Scala',
+            'hs': 'Haskell',
+            'lhs': 'Haskell',
+            'erl': 'Erlang',
+            'hrl': 'Erlang',
+            'ex': 'Elixir',
+            'exs': 'Elixir',
+            'clj': 'Clojure',
+            'cljs': 'Clojure',
+            'cljc': 'Clojure',
+            'fs': 'F#',
+            'fsx': 'F#',
+            'fsi': 'F#',
+            'ml': 'OCaml',
+            'mli': 'OCaml',
+            'elm': 'Elm',
+            'jl': 'Julia',
+            'm': 'MATLAB',
+            'f': 'Fortran',
+            'for': 'Fortran',
+            'f90': 'Fortran',
+            'f95': 'Fortran',
+            'cob': 'COBOL',
+            'cbl': 'COBOL',
+            'adb': 'Ada',
+            'ads': 'Ada',
+            'ada': 'Ada',
+            'lua': 'Lua',
+            'pl': 'Perl',
+            'pm': 'Perl',
+            'groovy': 'Groovy',
+            'gy': 'Groovy',
+            'gvy': 'Groovy',
+            'gv': 'Groovy',
+            'd': 'D',
+            'nim': 'Nim',
+            'cr': 'Crystal',
+            'zig': 'Zig',
+            'v': 'V',
+            'sol': 'Solidity',
+            'graphql': 'GraphQL',
+            'gql': 'GraphQL',
+            'proto': 'Protocol Buffers',
+            'tf': 'Terraform',
+            'tfvars': 'Terraform'
         }
         
         # Initialize Pygments formatter
@@ -86,7 +137,7 @@ class CodeAnalyzer:
             if ext in self.supported_languages:
                 return self.supported_languages[ext]
         
-        # Try to detect from code content
+        # Try to detect from code content with enhanced heuristics
         code_lines = code.strip().split('\n')
         
         # Python detection
@@ -123,6 +174,28 @@ class CodeAnalyzer:
         if any(line.strip().upper().startswith(('SELECT', 'INSERT', 'UPDATE', 'DELETE', 'CREATE', 'DROP'))
                for line in code_lines[:5]):
             return 'SQL'
+        
+        # Enhanced language detection with statistical analysis
+        # Check for specific language patterns
+        if any('fn ' in line and '{' in line for line in code_lines[:10]):
+            # Could be Rust
+            if any('let ' in line or 'mut ' in line for line in code_lines[:10]):
+                return 'Rust'
+        
+        if any('func ' in line and '{' in line for line in code_lines[:10]):
+            # Could be Go
+            if any('package ' in line for line in code_lines[:5]):
+                return 'Go'
+        
+        if any('sub ' in line or 'my $' in line for line in code_lines[:10]):
+            return 'Perl'
+        
+        if any(':-' in line or ':-' in line for line in code_lines[:10]):
+            # Could be Prolog
+            return 'Prolog'
+        
+        if any('module ' in line and 'where' in line for line in code_lines[:10]):
+            return 'Haskell'
         
         # Default to text
         return 'Text'
@@ -169,6 +242,10 @@ class CodeAnalyzer:
             analysis.update(self._analyze_java(code))
         elif language == 'C++':
             analysis.update(self._analyze_cpp(code))
+        elif language == 'Rust':
+            analysis.update(self._analyze_rust(code))
+        elif language == 'Go':
+            analysis.update(self._analyze_go(code))
         
         return analysis
     
@@ -245,8 +322,11 @@ class CodeAnalyzer:
         """Analyze Java code structure."""
         analysis = {}
         
-        # Simple regex-based analysis for Java
-        classes = re.findall(r'public\s+class\s+(\w+)', code)
+        try:
+            # Simple regex-based analysis for Java
+            classes = re.findall(r'public\s+class\s+(\w+)', code)
+        except Exception as e:
+            analysis["issues"] = [f"Error during Java analysis: {str(e)}"]
         methods = re.findall(r'public\s+(?:static\s+)?(?:void|int|String|boolean|double|float|long|char|byte|short)\s+(\w+)\s*\(', code)
         imports = re.findall(r'import\s+(.+?);', code)
         
@@ -263,16 +343,62 @@ class CodeAnalyzer:
         """Analyze C++ code structure."""
         analysis = {}
         
-        # Simple regex-based analysis for C++
-        functions = re.findall(r'(?:int|void|double|float|char|bool|string)\s+(\w+)\s*\(', code)
-        classes = re.findall(r'class\s+(\w+)', code)
-        includes = re.findall(r'#include\s*[<"]([^>"]+)[>"]', code)
+        try:
+            # Simple regex-based analysis for C++
+            functions = re.findall(r'(?:int|void|double|float|char|bool|string)\s+(\w+)\s*\(', code)
+            classes = re.findall(r'class\s+(\w+)', code)
+            includes = re.findall(r'#include\s*[<"]([^>"]+)[>"]', code)
+        except Exception as e:
+            analysis["issues"] = [f"Error during C++ analysis: {str(e)}"]
         
         analysis = {
             'functions': [{'name': name, 'type': 'function'} for name in functions],
             'classes': [{'name': name, 'type': 'class'} for name in classes],
             'imports': includes,
             'complexity': len(functions) + len(classes)
+        }
+        
+        return analysis
+    
+    def _analyze_rust(self, code: str) -> Dict[str, Any]:
+        """Analyze Rust code structure."""
+        analysis = {}
+        
+        try:
+            # Simple regex-based analysis for Rust
+            functions = re.findall(r'fn\s+(\w+)\s*\(', code)
+            structs = re.findall(r'struct\s+(\w+)', code)
+            impls = re.findall(r'impl\s+(\w+)', code)
+            uses = re.findall(r'use\s+(.+?);', code)
+        except Exception as e:
+            analysis["issues"] = [f"Error during Rust analysis: {str(e)}"]
+        
+        analysis = {
+            'functions': [{'name': name, 'type': 'function'} for name in functions],
+            'classes': [{'name': name, 'type': 'struct'} for name in structs],
+            'imports': uses,
+            'complexity': len(functions) + len(structs)
+        }
+        
+        return analysis
+    
+    def _analyze_go(self, code: str) -> Dict[str, Any]:
+        """Analyze Go code structure."""
+        analysis = {}
+        
+        try:
+            # Simple regex-based analysis for Go
+            functions = re.findall(r'func\s+(\w+)\s*\(', code)
+            types = re.findall(r'type\s+(\w+)', code)
+            imports = re.findall(r'import\s+(.+)', code)
+        except Exception as e:
+            analysis["issues"] = [f"Error during Go analysis: {str(e)}"]
+        
+        analysis = {
+            'functions': [{'name': name, 'type': 'function'} for name in functions],
+            'classes': [{'name': name, 'type': 'type'} for name in types],
+            'imports': imports,
+            'complexity': len(functions) + len(types)
         }
         
         return analysis
@@ -360,6 +486,18 @@ class CodeAnalyzer:
             
             if 'function ' in code and '=>' in code:
                 suggestions.append("💡 Consider using consistent function syntax (either traditional or arrow functions)")
+        
+        elif language == 'Java':
+            if 'System.out.println' in code:
+                suggestions.append("💡 Consider using a logging framework instead of System.out.println")
+        
+        elif language == 'C++':
+            if 'using namespace std' in code:
+                suggestions.append("⚠️  Avoid 'using namespace std' in header files")
+        
+        elif language == 'Rust':
+            if 'unwrap()' in code:
+                suggestions.append("💡 Consider using proper error handling instead of unwrap()")
         
         if not suggestions:
             suggestions.append("✅ Code looks well-structured! No major improvements needed.")

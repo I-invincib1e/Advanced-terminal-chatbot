@@ -12,15 +12,11 @@ from .provider import ProviderManager
 from .chat import ChatSession
 from .utils import ConfigManager
 from .code_analyzer import CodeAnalyzer
-from .context_manager import ContextManager
-from .conversation_brancher import ConversationBrancher
 
 __all__ = [
     "TerminalChatBot",
     "ProviderManager",
     "ChatSession",
     "ConfigManager",
-    "CodeAnalyzer",
-    "ContextManager",
-    "ConversationBrancher"
+    "CodeAnalyzer"
 ]

@@ -7,7 +7,7 @@
 [![Version](https://img.shields.io/badge/Version-1.0.0-orange.svg)](https://github.com/Neorex80/advanced-terminal-chatbot)
 [![Tests](https://img.shields.io/badge/Tests-Passing-brightgreen.svg)](https://github.com/Neorex80/advanced-terminal-chatbot)
 
-> A powerful, modular terminal-based chatbot with direct support for OpenAI and Anthropic APIs
+> A beautiful, streamlined terminal-based chatbot with direct support for OpenAI and Anthropic APIs
 
 [🚀 Quick Start](#-quick-start) • [✨ Features](#-features) • [🧩 Modules](#-modules) • [📖 Usage](#-usage) • [🤝 Contributing](#-contributing)
 
@@ -19,7 +19,7 @@ Get up and running with the Advanced Terminal Chatbot in just a few minutes.
 
 ### Prerequisites
 - **Python**: 3.8 or higher
-- **Dependencies**: requests, python-dotenv, pygments libraries
+- **Dependencies**: requests, python-dotenv, pygments, rich libraries
 - **API Key**: Valid key from OpenAI or Anthropic
 - **Internet**: Stable connection required
 
@@ -42,16 +42,16 @@ python main.py
 
 ## ✨ Key Features
 
-Experience the full power of AI in your terminal with these advanced features:
+Experience the power of AI in your terminal with a clean, intuitive interface:
 
 | Feature | Description |
 |---------|-------------|
 | 🧠 **Multi-Provider Support** | Seamlessly switch between OpenAI and Anthropic models |
-| 🌈 **Syntax Highlighting** | Beautiful code display with Pygments for better readability |
-| 🗂️ **Conversation Branching** | Create multiple conversation threads for different topics |
-| 🌿 **Context Management** | Switch between different contexts to organize your chats |
-| 💾 **Memory System** | Store and recall important information across conversations |
-| 🧪 **Code Analysis** | Analyze code structure and get suggestions for improvements |
+| 🎨 **Beautiful UI** | Modern terminal interface with rich panels and colors |
+| 🌈 **Code Analysis** | Syntax highlighting and code analysis with Pygments |
+| ⚡ **Streaming Mode** | Real-time response streaming for better interaction |
+| 📝 **Conversation History** | View past conversations in beautifully formatted panels |
+| 🎯 **Simple Commands** | Streamlined command set focused on essential features |
 
 ## 🧩 Core Modules
 
@@ -60,54 +60,61 @@ Experience the full power of AI in your terminal with these advanced features:
 
 | Module | Functionality |
 |--------|---------------|
-| `chatbot.py` | Main application orchestrator |
-| `chat.py` | Chat session management and API communication |
+| `chatbot.py` | Main application orchestrator with enhanced UI |
+| `chat.py` | Streamlined chat session management and API communication |
 | `provider.py` | AI provider selection and model management |
 | `code_analyzer.py` | Code analysis and syntax highlighting |
-| `context_manager.py` | Context switching and memory storage |
-| `conversation_brancher.py` | Branch management for conversations |
 | `utils.py` | Configuration and utility functions |
+| `commands/handler.py` | Clean command processing system |
 
 </details>
 
 ## 📖 Usage
 
-### Basic Chat Commands
+### Essential Chat Commands
 ```bash
-/help          # Show help information
+/help          # Show help information with beautiful formatting
 /clear         # Clear conversation history
-/history       # Show conversation history
+/history       # Show conversation history in styled panels
 /stream        # Toggle streaming mode
 /quit          # Exit the chat
+/exit          # Exit the chat
 ```
 
 ### Code Analysis
 ```bash
-/analyze def hello(): print("Hello World")  # Full code analysis
-/highlight function greet(name) { return `Hello ${name}!`; }  # Syntax only
+/analyze def hello(): print("Hello World")                    # Full code analysis
+/highlight function greet(name) { return `Hello ${name}!`; }  # Syntax highlighting only
 ```
 
-### Context Management
-```bash
-/context create Python Development python,development  # Create new context
-/context switch ctx_abc123                            # Switch context
-/context info                                        # Show current context
+### Example Session
+```
+🚀 Starting chat with OpenAI (gpt-4)
+💡 Type /help for available commands
+💡 Type /stream to toggle streaming mode
+
+👤 You: What can you help me with?
+
+╭─ 🤖 Assistant ──────────────────────────────────────────────╮
+│ I can help you with a wide variety of tasks including:     │
+│                                                             │
+│ • Programming and code review                               │
+│ • Writing and editing                                       │
+│ • Problem solving and analysis                              │
+│ • Learning new concepts                                     │
+│ • And much more!                                            │
+╰─────────────────────────────────────────────────────────────╯
 ```
 
-### Branch Management
-```bash
-/branch create Feature Development feature,new        # Create new branch
-/branch fork Experiment                               # Fork current branch
-/branch switch branch_abc123                          # Switch to branch
-/branch tree                                         # View branch structure
-/branch info                                         # Show current branch
-```
+## 🎨 UI Highlights
 
-### Memory System
-```bash
-/memory add "Python is great for data analysis" 0.8 python,data fact  # Add memory
-/memory search python                                                 # Search memories
-```
+The chatbot features a modern, clean interface inspired by leading CLI tools:
+
+- **Rich Panels**: All messages displayed in beautifully styled panels
+- **Color Coding**: User messages in blue, assistant in magenta, errors in red
+- **Status Indicators**: Animated "Thinking..." spinner during processing
+- **Markdown Support**: Full markdown rendering in responses
+- **Consistent Styling**: Professional appearance throughout
 
 ## 🧪 Testing
 
