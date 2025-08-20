@@ -1,4 +1,23 @@
+# Core Dependencies
 requests>=2.25.0
 python-dotenv>=0.19.0
 pygments>=2.15.0
 rich>=13.3.5
+pyperclip>=1.8.0
+
+# Enhanced UI & Experience Libraries
+prompt_toolkit>=3.0.36
+questionary>=1.11.1
+pyfiglet>=0.8.post1
+halo>=0.0.31
+tqdm>=4.65.0
+colorama>=0.4.6
+blessed>=1.20.0
+
+# Technical & Utility Libraries
+loguru>=0.7.0
+aiohttp>=3.8.5
+websockets>=11.0.3
+
+# TUI Framework (Optional - for future advanced UI)
+textual>=0.41.0

@@ -51,3 +51,14 @@ temp_env.txt
 # Test files
 test.py
 .coverage
+
+# Enhanced chatbot specific
+chatbot_debug.log
+code_analysis/
+exports/
+htmlcov/
+
+# Demo and temporary files
+demo_output/
+temp/
+*.tmp
