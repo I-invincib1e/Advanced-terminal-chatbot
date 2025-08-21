@@ -13,6 +13,32 @@ class ProviderManager:
         self.config = config
         self.providers: Dict[str, BaseProvider] = {}
         self._initialize_providers()
+        
+        # Define default models for each provider
+        self.default_models = {
+            "openai": "gpt-4o",
+            "anthropic": "claude-3-5-sonnet-20241022"
+        }
+        
+        # Define commonly used models to filter the overwhelming list
+        self.common_models = {
+            "openai": [
+                "gpt-4o",
+                "gpt-4o-mini", 
+                "gpt-4-turbo",
+                "gpt-4",
+                "gpt-3.5-turbo",
+                "o1-preview",
+                "o1-mini"
+            ],
+            "anthropic": [
+                "claude-3-5-sonnet-20241022",
+                "claude-3-5-haiku-20241022",
+                "claude-3-opus-20240229",
+                "claude-3-sonnet-20240229",
+                "claude-3-haiku-20240307"
+            ]
+        }
 
     def _initialize_providers(self):
         """Initialize available providers based on configuration."""
@@ -69,12 +95,40 @@ class ProviderManager:
             except (ValueError, KeyboardInterrupt):
                 print("\n❌ Invalid selection. Please try again.")
 
-    def fetch_api_models(self, provider_name: str) -> List[str]:
+    def fetch_api_models(self, provider_name: str, use_defaults: bool = True) -> List[str]:
         """Fetch models from the specified provider's API."""
         provider = self.get_provider(provider_name)
-        if provider:
+        if not provider:
+            return []
+            
+        provider_key = provider_name.lower()
+        
+        if use_defaults and provider_key in self.common_models:
+            # Return filtered common models instead of all available models
+            all_models = provider.get_models()
+            common_models = self.common_models[provider_key]
+            
+            # Filter to only include common models that are actually available
+            available_common_models = [model for model in common_models if model in all_models]
+            
+            if available_common_models:
+                return available_common_models
+            else:
+                # Fallback to all models if none of the common ones are available
+                return all_models
+        else:
+            # Return all models when use_defaults is False
             return provider.get_models()
-        return []
+    
+    def get_default_model(self, provider_name: str) -> Optional[str]:
+        """Get the default model for a provider."""
+        provider_key = provider_name.lower()
+        return self.default_models.get(provider_key)
+    
+    def get_common_models(self, provider_name: str) -> List[str]:
+        """Get the list of common models for a provider."""
+        provider_key = provider_name.lower()
+        return self.common_models.get(provider_key, [])
 
     def select_api_model(self, models: List[str]) -> str:
         """Select a model from API-fetched models."""

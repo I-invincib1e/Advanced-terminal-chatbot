@@ -504,6 +504,30 @@ class CodeAnalyzer:
         
         return suggestions
 
+    def format_code_block(self, code: str, language: str = "auto", show_analysis: bool = True) -> str:
+        """Format code with syntax highlighting and optional analysis."""
+        # Detect language if auto
+        if language == "auto":
+            language = self.detect_language(code)
+        
+        # Apply syntax highlighting
+        highlighted_code = self.highlight_syntax(code, language)
+        
+        # Format the output
+        output = f"```{language}\n{highlighted_code}\n```\n\n"
+        
+        if show_analysis:
+            explanation = self.generate_code_explanation(code, language)
+            output += explanation + "\n\n"
+            
+            suggestions = self.suggest_improvements(code, language)
+            if suggestions:
+                output += "💡 **Suggestions**:\n"
+                for suggestion in suggestions:
+                    output += f"   {suggestion}\n"
+        
+        return output
+
 
 def format_code_block(code: str, language: str = "auto", show_analysis: bool = True) -> str:
     """Format code with syntax highlighting and optional analysis."""
