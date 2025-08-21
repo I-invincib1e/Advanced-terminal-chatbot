@@ -17,6 +17,8 @@ from .history_manager import HistoryManager
 from .input_handler import HybridInputHandler
 from .clipboard_manager import ClipboardManager
 from .ui_enhancements import enhanced_ui
+from .features.templates import TemplateManager
+from .features.format_controls import FormatController
 
 
 class ChatSession:
@@ -62,6 +64,19 @@ class ChatSession:
             except Exception as e:
                 self.console.print(f"[yellow]⚠️ Clipboard manager initialization failed: {e}[/yellow]")
                 self.clipboard_manager = None
+            
+            # Initialize template and format managers
+            try:
+                self.template_manager = TemplateManager()
+            except Exception as e:
+                self.console.print(f"[yellow]⚠️ Template manager initialization failed: {e}[/yellow]")
+                self.template_manager = None
+                
+            try:
+                self.format_controller = FormatController()
+            except Exception as e:
+                self.console.print(f"[yellow]⚠️ Format controller initialization failed: {e}[/yellow]")
+                self.format_controller = None
             
             # Initialize input handler with all commands
             all_commands = [
@@ -741,6 +756,64 @@ class ChatSession:
     def copy_last_response(self, args: List[str] = None) -> None:
         """Copy the last AI response to clipboard."""
         self.clipboard_manager.copy_last_response()
+
+    # Template-related methods
+    def use_template(self, args: List[str]) -> None:
+        """Use a conversation template."""
+        if not self.template_manager:
+            self.console.print("[bold red]❌ Template manager not available[/bold red]")
+            return
+            
+        if not args:
+            self.template_manager.list_templates()
+            return
+
+        template_name = args[0]
+        template_content = self.template_manager.get_template(template_name)
+        
+        if template_content:
+            self.console.print(Panel(
+                template_content,
+                title=f"[bold cyan]📝 Template: {template_name}[/bold cyan]",
+                border_style="cyan"
+            ))
+            self.console.print("[dim]💡 Edit this template as needed and submit as your message.[/dim]")
+        else:
+            self.console.print(f"[bold red]❌ Template '{template_name}' not found[/bold red]")
+            self.template_manager.list_templates()
+
+    def list_templates(self, args: List[str] = None) -> None:
+        """List available templates."""
+        if not self.template_manager:
+            self.console.print("[bold red]❌ Template manager not available[/bold red]")
+            return
+        self.template_manager.list_templates()
+
+    # Format control methods
+    def set_format(self, args: List[str]) -> None:
+        """Set response format."""
+        if not self.format_controller:
+            self.console.print("[bold red]❌ Format controller not available[/bold red]")
+            return
+            
+        if not args:
+            self.format_controller.list_formats()
+            return
+
+        format_name = args[0]
+        if self.format_controller.set_format(format_name):
+            format_info = self.format_controller.get_format_info()
+            self.console.print(f"[bold green]✅ Format changed to: {format_info['icon']} {format_info['name']}[/bold green]")
+        else:
+            self.console.print(f"[bold red]❌ Format '{format_name}' not found[/bold red]")
+            self.format_controller.list_formats()
+
+    def list_formats(self, args: List[str] = None) -> None:
+        """List available response formats."""
+        if not self.format_controller:
+            self.console.print("[bold red]❌ Format controller not available[/bold red]")
+            return
+        self.format_controller.list_formats()
 
     def start_chat(self) -> None:
         """Start the enhanced interactive chat loop."""

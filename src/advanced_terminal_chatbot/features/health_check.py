@@ -82,10 +82,11 @@ class HealthChecker:
     def check_database(self) -> Tuple[bool, str]:
         """Check if the database can be accessed."""
         try:
-            from ..database import Database
-            db = Database()
-            # Try to connect and perform a simple query
-            db.get_connection()
+            from ..database import DatabaseManager
+            db = DatabaseManager("chatbot_history.db")
+            # Try to perform a simple query to test database connectivity
+            db.fetch_one("SELECT 1")
+            db.close()
             return True, "✅ Database accessible"
         except Exception as e:
             return False, f"❌ Database error: {str(e)[:50]}..."
